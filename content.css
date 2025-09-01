@@ -1,0 +1,184 @@
+/* X (Twitter) - Lists、Bookmarks、Moreボタンを非表示 */
+
+/* Messageボタンを非表示 */
+nav[aria-label="Primary"] a[href="/messages"],
+nav[role="navigation"] a[href="/messages"],
+a[data-testid="AppTabBar_DirectMessage_Link"],
+a[aria-label*="Direct message"],
+a[aria-label*="Messages"],
+a[aria-label*="メッセージ"],
+nav a[href="/messages"] {
+  display: none !important;
+}
+
+/* Messageボタンの親要素も非表示 */
+nav > div > div:has(a[href="/messages"]) {
+  display: none !important;
+}
+
+/* Listsボタンを非表示 */
+nav[aria-label="Primary"] a[href="/i/lists"],
+nav[role="navigation"] a[href="/i/lists"],
+a[data-testid="AppTabBar_DirectMessage_Link"][href="/i/lists"],
+nav a[aria-label*="Lists"],
+nav a[aria-label*="リスト"] {
+  display: none !important;
+}
+
+/* Bookmarksボタンを非表示 */
+nav[aria-label="Primary"] a[href="/i/bookmarks"],
+nav[role="navigation"] a[href="/i/bookmarks"],
+a[data-testid="AppTabBar_DirectMessage_Link"][href="/i/bookmarks"],
+nav a[aria-label*="Bookmarks"],
+nav a[aria-label*="ブックマーク"] {
+  display: none !important;
+}
+
+/* Moreボタンを非表示（サイドバーのMoreメニュー） */
+nav[aria-label="Primary"] div[aria-label="More menu items"],
+nav[role="navigation"] div[aria-label="More menu items"],
+nav button[aria-label*="More"],
+nav button[aria-label*="もっと見る"],
+div[aria-expanded][aria-haspopup="menu"][aria-label*="More"],
+div[aria-expanded][aria-haspopup="menu"][aria-label*="もっと見る"] {
+  display: none !important;
+}
+
+/* Lists、Bookmarks、Moreを含む親要素も非表示（ナビゲーション内のみ） */
+nav > div > div:has(a[href="/i/lists"]),
+nav > div > div:has(a[href="/i/bookmarks"]),
+nav > div > div:has(div[aria-label*="More"]),
+nav > div > div:has(div[aria-label*="もっと見る"]) {
+  display: none !important;
+}
+
+/* モバイル版のボタンも非表示 */
+div[role="navigation"] a[href="/i/lists"],
+div[role="navigation"] a[href="/i/bookmarks"],
+div[role="navigation"] button[aria-label*="More"],
+div[role="navigation"] button[aria-label*="もっと見る"] {
+  display: none !important;
+}
+
+/* X Premium勧誘バナーのみを慎重に非表示 */
+/* 特定のPremiumサインアップリンクのみ */
+a[href="/i/premium_sign_up"] {
+  display: none !important;
+}
+
+/* Premium勧誘バナーの親要素（制限付き） */
+div.css-175oi2r.r-nsbfu8:has(a[href="/i/premium_sign_up"]) {
+  display: none !important;
+}
+
+/* ツイートの時間表示を非表示 */
+/* timeタグ全般 */
+time {
+  display: none !important;
+}
+
+/* 時間表示を含むリンク（ツイート詳細へのリンク）- より具体的に */
+article a[href*="/status/"]:has(time) {
+  display: none !important;
+}
+
+/* 通知ボタンを非表示 */
+nav[aria-label="Primary"] a[href="/notifications"],
+nav[role="navigation"] a[href="/notifications"],
+a[data-testid="AppTabBar_Notifications_Link"],
+a[aria-label*="Notifications"],
+a[aria-label*="通知"],
+nav a[href="/notifications"] {
+  display: none !important;
+}
+
+/* 通知ボタンの親要素も非表示 */
+nav > div > div:has(a[href="/notifications"]) {
+  display: none !important;
+}
+
+/* 検索ボックスを非表示 */
+[data-testid="SearchBox_Search_Input"],
+form[role="search"][aria-label*="Search"],
+input[placeholder*="Search"],
+input[placeholder*="検索"] {
+  display: none !important;
+}
+
+/* サイドバーの検索セクションのみ非表示 */
+[data-testid="sidebarColumn"] > div > div:first-child:has(form[role="search"]) {
+  display: none !important;
+}
+
+/* フッター（Terms of Service等）を非表示 - より具体的に */
+nav[aria-label="Footer"] {
+  display: none !important;
+}
+
+/* フッターリンクを含む特定の要素のみ */
+[data-testid="sidebarColumn"] nav[aria-label="Footer"],
+[data-testid="sidebarColumn"] div:has(> a[href*="/tos"]):has(> a[href*="/privacy"]) {
+  display: none !important;
+}
+
+/* @username（ユーザーハンドル）を非表示 */
+/* User-Nameエリア内の@usernameリンクのみ */
+article div[data-testid="User-Name"] a[role="link"][tabindex="-1"][href^="/"],
+/* 特定のクラスを持つ@username span */
+article span.r-14j79pv:not([data-testid]),
+article span.r-18jsvk2:not([data-testid]),
+/* @usernameを含む表示要素（グレーテキスト） */
+article div[data-testid="User-Name"] > div > span[style*="color: rgb(113, 118, 123)"] {
+  display: none !important;
+}
+
+/* Explain this postボタンを非表示 */
+button[aria-label="Explain this post"],
+button[aria-label*="Explain"],
+div[role="button"][aria-label*="Explain"],
+/* AI関連の説明ボタン */
+article button[data-testid*="explain"],
+article div[aria-label*="AI"],
+/* メニュー項目のExplain */
+div[role="menuitem"] > div > div > span,
+/* ドロップダウンメニュー内 */
+div[data-testid="Dropdown"] div[role="menuitem"],
+/* 3点メニュー内のExplain this post */
+div[tabindex="0"][role="menuitem"] {
+  display: none !important;
+}
+
+/* Grokボタンを非表示 */
+button[aria-label*="Grok"],
+button[aria-label*="Enhance your post with Grok"],
+div[aria-label*="Grok"],
+button[data-testid*="grok"],
+div[data-testid*="grok"],
+/* ポスト作成エリアのGrokボタン - より具体的に */
+div[data-testid="toolBar"] button[aria-label*="Grok"],
+div[data-testid="toolBar"] button[aria-label*="Enhance"],
+/* ツールバー内のGrokボタン */
+div[data-testid="tweetTextarea_0_label"] ~ div button[aria-label*="Grok"],
+div[contenteditable="true"] ~ div button[aria-label*="Grok"],
+/* Grokアイコンを含むボタン */
+button svg path[d*="M18.244"],
+button svg path[d*="M17.834"] {
+  display: none !important;
+}
+
+/* ユーザー切り替えボタンを非表示 */
+/* サイドバーのアカウント切り替えボタン */
+div[data-testid="SideNav_AccountSwitcher_Button"],
+button[data-testid="SideNav_AccountSwitcher_Button"],
+/* アカウントメニューボタン */
+button[aria-label*="Account menu"],
+button[aria-label*="アカウント"],
+/* サイドバー下部のユーザー情報ボタン */
+nav[aria-label="Primary"] > div:last-child button[data-testid*="Account"],
+/* モバイル版のアカウント切り替え */
+header button[aria-label*="Account"],
+/* さらに表示ボタン（...） */
+button[aria-label="More options"],
+button[aria-label="さらに表示"] {
+  display: none !important;
+}
