@@ -1,85 +1,94 @@
 # X Button Hider
 
-X（Twitter）のナビゲーションメニューから「Lists」「Bookmarks」「More」ボタンを非表示にするChrome拡張機能です。
+A Chrome extension that hides the **Lists**, **Bookmarks**, and **More** buttons from X (Twitter)’s navigation menu. Strongly recommended to use together with *calm Twitter*.
 
-## 機能
+## Features
 
-### ナビゲーションボタン
-- 📋 **Lists**（リスト）ボタンを非表示
-- 🔖 **Bookmarks**（ブックマーク）ボタンを非表示
-- ➕ **More**（もっと見る）ボタンを非表示
-- 🔔 **Notifications**（通知）ボタンを非表示
-- ✉️ **Messages**（メッセージ）ボタンを非表示（v1.4.1で追加）
+### Navigation Buttons
 
-### ユーザー情報
-- 👤 **@username**（ユーザーハンドル）を非表示（v1.4.0で追加）
-- 🔄 **ユーザー切り替えボタン**を非表示（v1.4.0で追加）
+* 📋 Hide the **Lists** button
+* 🔖 Hide the **Bookmarks** button
+* ➕ Hide the **More** button
+* 🔔 Hide the **Notifications** button
+* ✉️ Hide the **Messages** button (added in v1.4.1)
 
-### ツイート関連
-- ⏰ **時間表示**（○分前、○時間前など）を非表示
-- • **中点**（·）を非表示
-- 🤖 **Explain this postボタン**を非表示
-- 🤖 **Enhance your post with Grokボタン**を非表示（v1.4.1で追加）
+### User Information
 
-### その他のUI要素
-- ✨ **X Premium**（認証バッジ）の勧誘バナーを非表示
-- 🔍 **検索ボックス**を非表示
-- 📄 **フッター**（Terms of Service、Privacy Policy等）を非表示
+* 👤 Hide **@username** (user handle) (added in v1.4.0)
+* 🔄 Hide the **account switch button** (added in v1.4.0)
 
-## インストール方法
+### Tweet-related
 
-1. **Chrome拡張機能の管理ページを開く**
-   - Chromeのアドレスバーに `chrome://extensions/` と入力
-   - または、Chrome メニュー → その他のツール → 拡張機能
+* ⏰ Hide the **time display** (e.g., "5m ago", "2h ago")
+* • Hide the **dot separator** (·)
+* 🤖 Hide the **Explain this post** button
+* 🤖 Hide the **Enhance your post with Grok** button (added in v1.4.1)
 
-2. **デベロッパーモードを有効にする**
-   - 右上の「デベロッパーモード」スイッチをオンにする
+### Other UI Elements
 
-3. **拡張機能を読み込む**
-   - 「パッケージ化されていない拡張機能を読み込む」ボタンをクリック
-   - このXフォルダを選択して「フォルダーを選択」
+* ✨ Hide the **X Premium** (verified badge) promotion banner
+* 🔍 Hide the **search box**
+* 📄 Hide the **footer** (Terms of Service, Privacy Policy, etc.)
 
-4. **確認**
-   - X（Twitter）を開いて、指定のボタンが非表示になっていることを確認
-   - ページをリロードする必要がある場合があります
+## Installation
 
-## 対応サイト
+1. **Open the Chrome extensions page**
 
-- https://twitter.com
-- https://x.com
+   * Type `chrome://extensions/` into the address bar
+   * Or go to Chrome Menu → More Tools → Extensions
 
-## トラブルシューティング
+2. **Enable Developer Mode**
 
-### ボタンが非表示にならない場合
+   * Toggle the “Developer mode” switch at the top right
 
-1. **ページをリロード**する（Ctrl/Cmd + R）
-2. **拡張機能が有効**になっているか確認
-3. **Chromeを再起動**する
+3. **Load the extension**
 
-### 一部のボタンだけ表示される場合
+   * Click the “Load unpacked” button
+   * Select the **X** folder and click “Select Folder”
 
-X（Twitter）は頻繁にUIを更新するため、セレクタが変更される可能性があります。
-その場合は `content.css` のセレクタを更新する必要があります。
+4. **Check**
 
-## ファイル構成
+   * Open X (Twitter) and confirm the specified buttons are hidden
+   * A page reload may be required
+
+## Supported Sites
+
+* [https://twitter.com](https://twitter.com)
+* [https://x.com](https://x.com)
+
+## Troubleshooting
+
+### Buttons are not hidden
+
+1. **Reload the page** (Ctrl/Cmd + R)
+2. Make sure the **extension is enabled**
+3. **Restart Chrome**
+
+### Only some buttons are hidden
+
+X (Twitter) frequently updates its UI, so selectors may change.
+If this happens, you’ll need to update the selectors in `content.css`.
+
+## File Structure
 
 ```
 X/
-├── manifest.json     # 拡張機能の設定ファイル
-├── content.css      # ボタンを非表示にするCSS
-├── content.js       # 動的に要素を非表示にするJavaScript
-├── icon.svg         # アイコン（未使用）
-└── README.md        # このファイル
+├── manifest.json     # Extension configuration file
+├── content.css       # CSS to hide buttons
+├── content.js        # JavaScript to dynamically hide elements
+├── icon.svg          # Icon (unused)
+└── README.md         # This file
 ```
 
-## カスタマイズ
+## Customization
 
-特定の要素だけを表示したい場合は、`content.css` の該当する部分をコメントアウトしてください。
+If you want to keep certain elements visible, comment out the corresponding section in `content.css`.
 
-### 例1：Bookmarksボタンだけ表示したい場合
+### Example 1: Show only the Bookmarks button
+
 ```css
-/* Bookmarksボタンを非表示 */
-/* この部分をコメントアウト
+/* Hide Bookmarks button */
+/* Comment out this section
 nav[aria-label="Primary"] a[href="/i/bookmarks"],
 ... {
   display: none !important;
@@ -87,81 +96,92 @@ nav[aria-label="Primary"] a[href="/i/bookmarks"],
 */
 ```
 
-### 例2：時間表示を表示したい場合
+### Example 2: Show the time display
+
 ```css
-/* ツイートの時間表示を非表示 */
-/* 以下のセクション全体をコメントアウト
-/* timeタグ全般 */
+/* Hide tweet time display */
+/* Comment out this entire section
+/* General time tag */
 /* time { ... } */
-/* から
-/* 中点（·）も非表示... */
+/* through */
+/* Dot (·) hide */
 /* article span:has(+ a time) { ... } */
-/* までの部分をコメントアウト */
+*/
 ```
 
-## 注意事項
+## Notes
 
-- この拡張機能はX（Twitter）の公式機能ではありません
-- UIの更新により動作しなくなる可能性があります
-- プライベートな使用を推奨します
+* This extension is not an official feature of X (Twitter)
+* It may stop working if the UI changes
+* Recommended for private use only
 
-## 更新履歴
+## Changelog
 
-### v1.4.2 (2025年1月)
-- 🔧 @username削除処理を再修正（表示名が消える問題を解決）
-- 🎯 より限定的なセレクタで@usernameのみを対象に
-- ⚡ User-Nameエリア内のみを処理するように最適化
+### v1.4.2 (January 2025)
 
-### v1.4.1 (2025年1月)
-- ✉️ Messages（メッセージ）ボタンの非表示機能を追加
-- 🤖 Enhance your post with Grokボタンの非表示機能を追加
-- 🔧 @username削除処理を修正（表示名は残すように改善）
-- 🎯 Explain this postボタンの削除処理を強化
+* 🔧 Fixed @username removal again (resolved display name disappearing)
+* 🎯 More specific selector targeting only @username
+* ⚡ Optimized to affect only the user-name area
 
-### v1.4.0 (2025年1月)
-- 👤 @username（ユーザーハンドル）の非表示機能を追加
-- 🤖 Explain this postボタンの非表示機能を追加
-- 🔄 ユーザー切り替えボタンの非表示機能を追加
-- 🎯 JavaScriptで@usernameを動的に削除
+### v1.4.1 (January 2025)
 
-### v1.3.1 (2025年1月)
-- 🔧 画面が真っ黒になる問題を修正
-- 🎯 CSSセレクタを最適化（幅広すぎるセレクタを削除）
-- 🔍 中点削除処理を精密化
-- ⚡ パフォーマンスを改善
+* ✉️ Added option to hide **Messages** button
+* 🤖 Added option to hide **Enhance your post with Grok** button
+* 🔧 Improved @username removal (keeps display name visible)
+* 🎯 Strengthened removal of **Explain this post** button
 
-### v1.3.0 (2025年1月)
-- 🔔 通知ボタンの非表示機能を追加
-- • 中点（·）の非表示機能を追加
-- 🔍 検索ボックスの非表示機能を追加
-- 📄 フッター（Terms of Service等）の非表示機能を追加
-- 🔧 JavaScriptで中点を動的に削除
+### v1.4.0 (January 2025)
 
-### v1.2.0 (2025年1月)
-- ⏰ ツイートの時間表示非表示機能を追加
-- 🗿 相対時間表示（○分前、○時間前など）を非表示
-- 🔗 時間表示へのリンクも非表示
+* 👤 Added option to hide @username (user handle)
+* 🤖 Added option to hide **Explain this post** button
+* 🔄 Added option to hide the account switch button
+* 🎯 Dynamic @username removal via JavaScript
 
-### v1.1.2 (2025年1月)
-- 🎯 自分のプロフィールページが真っ黒になる問題を修正
-- 🔍 プロフィールページの判定ロジックを追加
-- 🏯 SPAのページ遷移に対応
+### v1.3.1 (January 2025)
 
-### v1.1.1 (2025年1月)
-- 🔧 サイトが真っ黒になる問題を修正
-- 🎯 CSSセレクタをより精密に調整
-- 🔍 JavaScriptの非表示処理を最適化
+* 🔧 Fixed black screen issue
+* 🎯 Optimized CSS selectors (removed overly broad ones)
+* 🔍 Refined dot removal logic
+* ⚡ Performance improvements
 
-### v1.1.0 (2025年1月)
-- ✨ X Premium勧誘バナーの非表示機能を追加
-- 🔄 動的に追加される要素への対応
+### v1.3.0 (January 2025)
 
-### v1.0.0 (2025年1月)
-- 🎉 初回リリース
-- 📋 Listsボタンの非表示
-- 🔖 Bookmarksボタンの非表示
-- ➕ Moreボタンの非表示
+* 🔔 Added option to hide Notifications button
+* • Added option to hide dot (·)
+* 🔍 Added option to hide search box
+* 📄 Added option to hide footer (Terms of Service, etc.)
+* 🔧 Dynamic dot removal via JavaScript
 
-## ライセンス
+### v1.2.0 (January 2025)
 
-個人使用のみ。再配布はご遠慮ください。
+* ⏰ Added option to hide tweet time display
+* 🗿 Hide relative time (e.g., "5m ago", "2h ago")
+* 🔗 Hide links to time display
+
+### v1.1.2 (January 2025)
+
+* 🎯 Fixed black screen issue on profile page
+* 🔍 Added profile page detection logic
+* 🏯 Supported SPA page transitions
+
+### v1.1.1 (January 2025)
+
+* 🔧 Fixed black screen issue
+* 🎯 Fine-tuned CSS selectors
+* 🔍 Optimized JavaScript hiding process
+
+### v1.1.0 (January 2025)
+
+* ✨ Added option to hide X Premium promotion banner
+* 🔄 Support for dynamically loaded elements
+
+### v1.0.0 (January 2025)
+
+* 🎉 Initial release
+* 📋 Hide Lists button
+* 🔖 Hide Bookmarks button
+* ➕ Hide More button
+
+## License
+
+For personal use only. Redistribution is prohibited.
