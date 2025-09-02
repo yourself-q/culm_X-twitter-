@@ -170,3 +170,96 @@
 - User-Nameエリア内の要素のみを対象にするように変更
 - 子要素を持たないspanのみを対象に（表示名は通常子要素を持つ）
 - CSSセレクタも同様に限定的に修正
+
+## Stage 13: 三点メニュー改善 - v1.4.3
+**Goal**: Repostボタン復活とQuoteボタン非表示、三点メニューの整理
+**Success Criteria**: 
+- Repostボタンが表示される
+- Quoteボタンが非表示になる
+- 三点メニューで削除、ミュート、ブロック、Not interesting以外が非表示になる
+**Tests**: 各ボタンとメニュー項目が適切に表示/非表示になることを確認
+**Status**: Complete ✅
+
+### v1.4.3での修正・実装内容
+- RepostボタンのCSS・JavaScript非表示設定を削除
+- Quoteボタンを非表示にするCSS追加
+- 三点メニューから以下の項目を非表示に追加:
+  - Follow/Unfollow {@username}
+  - Add/remove from Lists
+  - View post engagements  
+  - Embed post
+  - Highlight on your profile
+  - Change who can reply
+  - Pin to your profile
+- CSSとJavaScript両方で対応し確実性を向上
+
+## Stage 14: 三点メニュー完全修正 - v1.4.4
+**Goal**: 残存する不要メニュー項目の完全削除とQuoteボタンの確実な非表示
+**Success Criteria**: 
+- Add/remove from Lists, View post engagements/analytics, Request Community Note, Highlight on your profileが確実に非表示
+- Quoteボタンが完全に非表示になる
+- Repostボタンは表示されたまま
+**Tests**: 三点メニューで削除、ミュート、ブロック、Not interesting以外が全て非表示になることを確認
+**Status**: Complete ✅
+
+### v1.4.4での修正・実装内容
+- **包括的なテキストマッチング追加**: 
+  - "View post analytics"、"Analytics"、"Engagements"等の短縮形も追加
+  - 日本語バリエーション追加（"ツイートアナリティクス"等）
+- **CSS セレクタの強化**:
+  - `analytics`、`list`のdata-testidを追加
+  - aria-labelベースのセレクタを追加（data-testidに依存しない）
+- **Quote ボタン対策の大幅強化**:
+  - CSS: 多様なQuoteボタンパターンに対応（inline、menu、親要素等）
+  - JavaScript: Repost除外条件付きでQuote完全削除
+  - 関数名を`removeExplainGrokAndQuote`に変更
+- **二重保護システム**: CSS + JavaScriptの両方で確実性を最大化
+
+## Stage 15: レスポンス高速化とラグ削減 - v1.4.5
+**Goal**: 三点メニュー項目の表示ラグを削減し、@usernameレベルの即座非表示を実現
+**Success Criteria**: 
+- 三点メニューのクリック時に遅延なく不要項目が非表示になる
+- MutationObserverの応答性を大幅改善
+- 保護対象項目（削除・ミュート・ブロック・Not interested）は確実に表示維持
+**Tests**: 三点メニューを開いた瞬間に不要項目が見えない状態を確認
+**Status**: Complete ✅
+
+### v1.4.5での修正・実装内容
+- **ラグ削減の根本対策**:
+  - MutationObserver遅延: 100ms → 0ms （即座実行）
+  - 三点ボタンクリック検知システム追加（10ms極小遅延）
+  - メニュー出現専用監視システム `setupMenuObserver()` 新設
+- **高速処理アーキテクチャ**:
+  - クリックイベントリスナーでボタン押下を即座検知
+  - ドロップダウン/メニュー要素追加を独立監視
+  - 複数セレクタパターンで包括的検索
+- **強化されたメニュークリーンアップ**:
+  - 保護パターン追加（delete, mute, block, not interested, report）
+  - 短縮キーワードでの効率的マッチング
+  - エラー耐性向上（try-catch包含）
+- **多重初期化保護**: DOMContentLoaded、load、URLchange全てでメニュー監視を確実に設定
+
+## Stage 16: Repostボタン保護修正 - v1.4.6  
+**Goal**: Repostボタンが誤って非表示になる問題を修正し、Quoteのみを非表示にする
+**Success Criteria**: 
+- Repostボタンが確実に表示される
+- Quoteボタンは非表示のまま  
+- 三点メニューでもRepost項目が表示される
+**Tests**: Repostボタンが機能し、Quoteボタンが非表示になることを確認
+**Status**: Complete ✅
+
+### v1.4.6での修正・実装内容
+**根本原因**: 広すぎるCSSセレクタとJavaScriptパターンがRepostボタンも捉えていた
+- **CSS完全修正**:
+  - 全Quoteセレクタに`:not([aria-label*="Repost"])`と`:not([data-testid*="repost"])`を追加
+  - 日本語版も`:not([aria-label*="リポスト"])`で保護強化
+  - 二重・三重のRepost除外条件で確実性を最大化
+- **JavaScript強化**:
+  - `cleanupThreeDotMenu()`でRepost絶対保護（最優先チェック）
+  - `removeExplainGrokAndQuote()`でRepost検出ロジック大幅強化
+  - retweet/リツイートパターンも保護対象に追加
+- **保護階層システム**:
+  1. Repost絶対保護（最優先）
+  2. 重要項目保護（delete, mute, block, not interested）  
+  3. 不要項目削除（quote, community, bookmark等）
+- **確実性向上**: text + aria-label + data-testid の全属性を複合チェック

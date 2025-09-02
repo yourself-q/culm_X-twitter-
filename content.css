@@ -138,13 +138,73 @@ button[aria-label*="Explain"],
 div[role="button"][aria-label*="Explain"],
 /* AI関連の説明ボタン */
 article button[data-testid*="explain"],
-article div[aria-label*="AI"],
-/* メニュー項目のExplain */
-div[role="menuitem"] > div > div > span,
-/* ドロップダウンメニュー内 */
-div[data-testid="Dropdown"] div[role="menuitem"],
-/* 3点メニュー内のExplain this post */
-div[tabindex="0"][role="menuitem"] {
+article div[aria-label*="AI"] {
+  display: none !important;
+}
+
+/* 三点メニュー内の不要な機能を非表示 */
+/* data-testid基準（後方互換） */
+div[role="menuitem"][data-testid*="community"],
+div[role="menuitem"][data-testid*="Community"],
+div[role="menuitem"][data-testid*="quote"],
+div[role="menuitem"][data-testid*="Quote"],
+div[role="menuitem"][data-testid*="bookmark"],
+div[role="menuitem"][data-testid*="Bookmark"],
+div[role="menuitem"][data-testid*="follow"],
+div[role="menuitem"][data-testid*="Follow"],
+div[role="menuitem"][data-testid*="unfollow"],
+div[role="menuitem"][data-testid*="Unfollow"],
+div[role="menuitem"][data-testid*="engagement"],
+div[role="menuitem"][data-testid*="Engagement"],
+div[role="menuitem"][data-testid*="analytics"],
+div[role="menuitem"][data-testid*="Analytics"],
+div[role="menuitem"][data-testid*="embed"],
+div[role="menuitem"][data-testid*="Embed"],
+div[role="menuitem"][data-testid*="highlight"],
+div[role="menuitem"][data-testid*="Highlight"],
+div[role="menuitem"][data-testid*="reply"],
+div[role="menuitem"][data-testid*="Reply"],
+div[role="menuitem"][data-testid*="pin"],
+div[role="menuitem"][data-testid*="Pin"],
+div[role="menuitem"][data-testid*="list"],
+div[role="menuitem"][data-testid*="List"],
+/* aria-label基準（後方互換） */
+div[role="menuitem"][aria-label*="Community"],
+div[role="menuitem"][aria-label*="Quote"],
+div[role="menuitem"][aria-label*="Bookmark"],
+div[role="menuitem"][aria-label*="Follow"],
+div[role="menuitem"][aria-label*="Unfollow"],
+div[role="menuitem"][aria-label*="engagement"],
+div[role="menuitem"][aria-label*="analytics"],
+div[role="menuitem"][aria-label*="Embed"],
+div[role="menuitem"][aria-label*="Highlight"],
+div[role="menuitem"][aria-label*="reply"],
+div[role="menuitem"][aria-label*="Pin"],
+div[role="menuitem"][aria-label*="List"] {
+  display: none !important;
+}
+
+/* Quoteボタンを非表示（Repostは保護） */
+/* 具体的なQuoteボタンのみターゲット */
+div[data-testid="tweetButtonInline"][aria-label*="Quote"]:not([aria-label*="Repost"]),
+div[data-testid="tweetButtonInline"][aria-label*="引用"]:not([aria-label*="リポスト"]),
+/* Quote専用セレクタ（Repost除外） */
+button[data-testid*="quote"]:not([data-testid*="repost"]):not([aria-label*="Repost"]),
+button[data-testid*="Quote"]:not([data-testid*="Repost"]):not([aria-label*="Repost"]),
+button[aria-label*="Quote"]:not([aria-label*="Repost"]):not([data-testid*="repost"]),
+button[aria-label*="引用"]:not([aria-label*="リポスト"]):not([data-testid*="repost"]),
+/* Quoteメニュー項目（Repost除外） */
+div[role="menuitem"][aria-label*="Quote"]:not([aria-label*="Repost"]),
+div[role="menuitem"][aria-label*="引用"]:not([aria-label*="リポスト"]),
+/* Quoteボタンの親要素パターン（強化） */
+div[data-testid*="quote"]:not([data-testid*="repost"]):not([aria-label*="Repost"]),
+div[data-testid*="Quote"]:not([data-testid*="Repost"]):not([aria-label*="Repost"]),
+/* 具体的なQuote操作ボタン（Repost除外） */
+div[role="button"][aria-label*="Quote"]:not([aria-label*="Repost"]):not([data-testid*="repost"]),
+div[role="button"][aria-label*="引用"]:not([aria-label*="リポスト"]):not([data-testid*="repost"]),
+/* ツイートアクション内のQuote（Repost除外） */
+article div[role="button"][aria-label*="Quote"]:not([aria-label*="Repost"]),
+article button[aria-label*="Quote"]:not([aria-label*="Repost"]) {
   display: none !important;
 }
 

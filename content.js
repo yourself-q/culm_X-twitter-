@@ -156,25 +156,19 @@ function removeUsernames() {
   });
 }
 
-// Explain this postとGrokボタンを削除する関数
-function removeExplainAndGrok() {
+// Explain this post、Grok、Quoteボタンを削除する関数
+function removeExplainGrokAndQuote() {
   // Explain this postボタン
   const explainButtons = document.querySelectorAll(
     'button[aria-label*="Explain"], ' +
     'div[role="button"][aria-label*="Explain"], ' +
-    'button[data-testid*="explain"], ' +
-    'div[role="menuitem"] span'
+    'button[data-testid*="explain"]'
   );
   
   explainButtons.forEach(button => {
     const text = button.textContent || button.getAttribute('aria-label') || '';
     if (text.includes('Explain') || text.includes('explain')) {
-      button.style.display = 'none';
-      button.style.visibility = 'hidden';
-      // 親要素も確認
-      if (button.parentElement && button.parentElement.getAttribute('role') === 'menuitem') {
-        button.parentElement.style.display = 'none';
-      }
+      hideElement(button);
     }
   });
   
@@ -187,8 +181,7 @@ function removeExplainAndGrok() {
   );
   
   grokButtons.forEach(button => {
-    button.style.display = 'none';
-    button.style.visibility = 'hidden';
+    hideElement(button);
   });
   
   // テキストベースでGrokを含む要素を検索
@@ -196,8 +189,117 @@ function removeExplainAndGrok() {
   allButtons.forEach(button => {
     const text = button.textContent || '';
     if (text.includes('Enhance your post with Grok') || text.includes('Grok')) {
-      button.style.display = 'none';
-      button.style.visibility = 'hidden';
+      hideElement(button);
+    }
+  });
+  
+  // Quoteボタンを削除（Repost絶対保護版）
+  const potentialQuoteButtons = document.querySelectorAll(
+    'button[aria-label*="Quote"], ' +
+    'div[role="button"][aria-label*="Quote"], ' +
+    'button[data-testid*="quote"], ' +
+    'div[data-testid*="quote"], ' +
+    'button[aria-label*="引用"], ' +
+    'div[role="button"][aria-label*="引用"]'
+  );
+  
+  potentialQuoteButtons.forEach(button => {
+    const text = button.textContent || '';
+    const ariaLabel = button.getAttribute('aria-label') || '';
+    const dataTestId = button.getAttribute('data-testid') || '';
+    const combinedText = (text + ' ' + ariaLabel + ' ' + dataTestId).toLowerCase();
+    
+    // Repost要素は絶対に保護（最優先チェック）
+    const isRepost = combinedText.includes('repost') || 
+                    combinedText.includes('リポスト') || 
+                    combinedText.includes('retweet') || 
+                    combinedText.includes('リツイート');
+    
+    if (isRepost) return; // Repostは絶対保護
+    
+    // Quote確認（Repost除外済みなので安全）
+    const isQuote = combinedText.includes('quote') || combinedText.includes('引用');
+    
+    if (isQuote) {
+      hideElement(button);
+    }
+  });
+}
+
+// 三点メニューの不要な項目を削除する関数（Repost保護強化版）
+function cleanupThreeDotMenu() {
+  // より包括的な不要メニューパターン
+  const unwantedPatterns = [
+    // 短縮版キーワード（部分マッチでキャッチ）
+    'Community', 'コミュニティ', 'Bookmark', 'ブックマーク',
+    'Analytics', 'アナリティクス', 'Engagement', 'エンゲージメント', 
+    'Embed', '埋め込み', 'Follow @', 'フォロー @', 'Unfollow @', 'フォロー解除 @',
+    'Highlight', 'ハイライト', 'Pin to', '固定', 'Lists', 'リスト', 'reply', '返信'
+  ];
+  
+  // より包括的なセレクタで検索
+  const selectors = [
+    'div[role="menuitem"]',
+    'div[data-testid*="menu"] div',
+    'div[role="menu"] div',
+    '[role="menuitem"]'
+  ];
+  
+  selectors.forEach(selector => {
+    try {
+      const menuItems = document.querySelectorAll(selector);
+      
+      menuItems.forEach(menuItem => {
+        const text = (menuItem.textContent || '').trim();
+        const ariaLabel = menuItem.getAttribute('aria-label') || '';
+        const combinedText = (text + ' ' + ariaLabel).toLowerCase();
+        
+        // 空のテキストは無視
+        if (!text) return;
+        
+        // Repostは絶対保護（最優先）
+        const repostPatterns = ['repost', 'リポスト', 'retweet', 'リツイート'];
+        const isRepost = repostPatterns.some(pattern => 
+          combinedText.includes(pattern.toLowerCase())
+        );
+        
+        if (isRepost) return; // Repostは絶対に保護
+        
+        // 重要な項目は保護（削除、ミュート、ブロック、Not interested）
+        const protectedPatterns = ['delete', '削除', 'mute', 'ミュート', 'block', 'ブロック', 
+                                 'not interested', '興味がない', 'report', '報告'];
+        
+        const isProtected = protectedPatterns.some(pattern => 
+          combinedText.includes(pattern.toLowerCase())
+        );
+        
+        if (isProtected) return; // 保護されたアイテムはスキップ
+        
+        // Quote専用チェック（Repost除外済みなので安全）
+        if (combinedText.includes('quote') || combinedText.includes('引用')) {
+          hideElement(menuItem);
+          return;
+        }
+        
+        // 不要パターンチェック
+        const shouldHide = unwantedPatterns.some(pattern => 
+          combinedText.includes(pattern.toLowerCase())
+        );
+        
+        if (shouldHide) {
+          hideElement(menuItem);
+          return;
+        }
+        
+        // @usernameを含むフォローボタン（動的対応）
+        if (text.match(/^(Follow|Unfollow)\s+@\w+/) || 
+            text.match(/^(フォロー|フォロー解除)\s+@\w+/)) {
+          hideElement(menuItem);
+        }
+      });
+    } catch (e) {
+      // セレクタエラーを無視して続行
+      console.debug('Menu selector error:', e);
     }
   });
 }
@@ -207,11 +309,50 @@ function hideAllElements() {
   hidePremiumBanner();
   removeDots();
   removeUsernames();
-  removeExplainAndGrok();
+  removeExplainGrokAndQuote();
+  cleanupThreeDotMenu();
 }
 
 // MutationObserverで動的に追加される要素を監視
 let observer = null;
+
+// 三点メニュー専用の高速監視
+function setupMenuObserver() {
+  // 三点ボタンクリック時の即座処理
+  document.addEventListener('click', (event) => {
+    // 三点メニューボタンがクリックされた場合
+    const target = event.target.closest('button[aria-label*="More"], button[aria-haspopup="menu"]');
+    if (target) {
+      // 少し遅延してメニュー項目が作られるのを待つ
+      setTimeout(() => {
+        cleanupThreeDotMenu();
+      }, 10); // 極小遅延
+    }
+  });
+  
+  // ドロップダウンメニューの出現を監視
+  const menuObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          // メニューまたはドロップダウンが追加された場合
+          if (node.matches?.('div[role="menu"], div[data-testid*="Dropdown"], div[role="menuitem"]') ||
+              node.querySelector?.('div[role="menuitem"]')) {
+            // 即座にクリーンアップ実行
+            cleanupThreeDotMenu();
+          }
+        }
+      });
+    });
+  });
+  
+  if (document.body) {
+    menuObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+}
 
 // MutationObserverをセットアップする関数
 function setupObserver() {
@@ -236,8 +377,8 @@ function setupObserver() {
     });
     
     if (shouldCheck) {
-      // 少し遅延させて実行（DOMの更新が完了するのを待つ）
-      setTimeout(hideAllElements, 100);
+      // 即座に実行（遅延を最小化）
+      setTimeout(hideAllElements, 0);
     }
   });
   
@@ -254,6 +395,7 @@ function setupObserver() {
 function waitForBody() {
   if (document.body) {
     setupObserver();
+    setupMenuObserver(); // メニュー専用監視を追加
     hideAllElements();
   } else {
     // まだbodyが存在しない場合は少し待って再試行
@@ -277,6 +419,7 @@ if (document.readyState === 'loading') {
   // DOMがまだ読み込み中の場合
   document.addEventListener('DOMContentLoaded', () => {
     setupObserver();
+    setupMenuObserver();
     hideAllElements();
   });
 } else {
@@ -287,6 +430,7 @@ if (document.readyState === 'loading') {
 // ページが完全に読み込まれた後にも実行
 window.addEventListener('load', () => {
   setupObserver(); // 念のため再度確認
+  setupMenuObserver(); // メニュー監視も再確認
   setTimeout(hideAllElements, 1000);
   setTimeout(hideAllElements, 3000);
 });

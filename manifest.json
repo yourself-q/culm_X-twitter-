@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "X Button Hider",
-  "version": "1.4.2",
+  "version": "1.4.6",
   "description": "Xの不要な要素を非表示：ナビボタン、@username、時間表示、Premium勧誘、検索ボックス等",
   "permissions": [],
   "host_permissions": [
