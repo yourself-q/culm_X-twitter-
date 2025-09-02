@@ -245,6 +245,8 @@ function cleanupThreeDotMenu() {
     '[role="menuitem"]'
   ];
   
+  let menusToResize = new Set();
+  
   selectors.forEach(selector => {
     try {
       const menuItems = document.querySelectorAll(selector);
@@ -278,6 +280,9 @@ function cleanupThreeDotMenu() {
         // Quote専用チェック（Repost除外済みなので安全）
         if (combinedText.includes('quote') || combinedText.includes('引用')) {
           hideElement(menuItem);
+          // メニューコンテナをリサイズ対象に追加
+          const menuContainer = menuItem.closest('div[role="menu"]');
+          if (menuContainer) menusToResize.add(menuContainer);
           return;
         }
         
@@ -288,6 +293,9 @@ function cleanupThreeDotMenu() {
         
         if (shouldHide) {
           hideElement(menuItem);
+          // メニューコンテナをリサイズ対象に追加
+          const menuContainer = menuItem.closest('div[role="menu"]');
+          if (menuContainer) menusToResize.add(menuContainer);
           return;
         }
         
@@ -295,6 +303,9 @@ function cleanupThreeDotMenu() {
         if (text.match(/^(Follow|Unfollow)\s+@\w+/) || 
             text.match(/^(フォロー|フォロー解除)\s+@\w+/)) {
           hideElement(menuItem);
+          // メニューコンテナをリサイズ対象に追加
+          const menuContainer = menuItem.closest('div[role="menu"]');
+          if (menuContainer) menusToResize.add(menuContainer);
         }
       });
     } catch (e) {
@@ -302,6 +313,62 @@ function cleanupThreeDotMenu() {
       console.debug('Menu selector error:', e);
     }
   });
+  
+  // メニューコンテナのサイズを調整
+  menusToResize.forEach(menuContainer => {
+    resizeMenuContainer(menuContainer);
+  });
+}
+
+// メニューコンテナのサイズを調整する関数
+function resizeMenuContainer(menuContainer) {
+  try {
+    // 表示されているメニューアイテムのみを取得
+    const visibleItems = menuContainer.querySelectorAll('div[role="menuitem"]');
+    let visibleCount = 0;
+    let itemHeight = 0;
+    
+    visibleItems.forEach(item => {
+      const computedStyle = window.getComputedStyle(item);
+      // display: none または visibility: hidden でない場合は表示されている
+      if (computedStyle.display !== 'none' && computedStyle.visibility !== 'hidden') {
+        visibleCount++;
+        // 最初の表示アイテムの高さを基準にする
+        if (itemHeight === 0) {
+          itemHeight = item.offsetHeight;
+        }
+      }
+    });
+    
+    // 表示アイテムがない場合は何もしない
+    if (visibleCount === 0 || itemHeight === 0) return;
+    
+    // コンテナの現在の高さを取得
+    const currentHeight = menuContainer.offsetHeight;
+    const computedStyle = window.getComputedStyle(menuContainer);
+    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+    const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+    const borderTop = parseFloat(computedStyle.borderTopWidth) || 0;
+    const borderBottom = parseFloat(computedStyle.borderBottomWidth) || 0;
+    
+    // 新しい高さを計算（表示アイテム数 × アイテム高さ + パディング + ボーダー）
+    const newHeight = (visibleCount * itemHeight) + paddingTop + paddingBottom + borderTop + borderBottom;
+    
+    // 高さが変わった場合のみ調整
+    if (Math.abs(currentHeight - newHeight) > 5) { // 5px以上の差がある場合のみ
+      menuContainer.style.height = newHeight + 'px';
+      menuContainer.style.maxHeight = newHeight + 'px';
+      
+      // アニメーション用の親要素も調整（存在する場合）
+      const animationWrapper = menuContainer.parentElement;
+      if (animationWrapper && animationWrapper.style.height) {
+        animationWrapper.style.height = newHeight + 'px';
+        animationWrapper.style.maxHeight = newHeight + 'px';
+      }
+    }
+  } catch (e) {
+    console.debug('Menu container resize error:', e);
+  }
 }
 
 // すべての非表示処理を実行する関数
@@ -326,6 +393,13 @@ function setupMenuObserver() {
       // 少し遅延してメニュー項目が作られるのを待つ
       setTimeout(() => {
         cleanupThreeDotMenu();
+        // さらに少し遅延してアニメーション後にもリサイズを実行
+        setTimeout(() => {
+          const menuContainers = document.querySelectorAll('div[role="menu"]');
+          menuContainers.forEach(menuContainer => {
+            resizeMenuContainer(menuContainer);
+          });
+        }, 50);
       }, 10); // 極小遅延
     }
   });
@@ -340,6 +414,13 @@ function setupMenuObserver() {
               node.querySelector?.('div[role="menuitem"]')) {
             // 即座にクリーンアップ実行
             cleanupThreeDotMenu();
+            // アニメーション後にリサイズを実行
+            setTimeout(() => {
+              const menuContainers = document.querySelectorAll('div[role="menu"]');
+              menuContainers.forEach(menuContainer => {
+                resizeMenuContainer(menuContainer);
+              });
+            }, 50);
           }
         }
       });
