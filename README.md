@@ -1,187 +1,66 @@
-# X Button Hider
+# Culm X-twitter-
 
-A Chrome extension that hides the **Lists**, **Bookmarks**, and **More** buttons from X (Twitter)’s navigation menu. Strongly recommended to use together with *calm Twitter*.
+[日本語](README_JP.md) | English
+
+A browser extension that hides distracting UI elements on X (formerly Twitter) to provide a cleaner browsing experience.
 
 ## Features
 
-### Navigation Buttons
-
-* 📋 Hide the **Lists** button
-* 🔖 Hide the **Bookmarks** button
-* ➕ Hide the **More** button
-* 🔔 Hide the **Notifications** button
-* ✉️ Hide the **Messages** button (added in v1.4.1)
-
-### User Information
-
-* 👤 Hide **@username** (user handle) (added in v1.4.0)
-* 🔄 Hide the **account switch button** (added in v1.4.0)
-
-### Tweet-related
-
-* ⏰ Hide the **time display** (e.g., "5m ago", "2h ago")
-* • Hide the **dot separator** (·)
-* 🤖 Hide the **Explain this post** button
-* 🤖 Hide the **Enhance your post with Grok** button (added in v1.4.1)
-
-### Other UI Elements
-
-* ✨ Hide the **X Premium** (verified badge) promotion banner
-* 🔍 Hide the **search box**
-* 📄 Hide the **footer** (Terms of Service, Privacy Policy, etc.)
+- Hides navigation buttons (Lists, Bookmarks, More)
+- Removes @username displays from posts
+- Removes time separators (dots) between elements
+- Blocks Premium subscription prompts and advertisements
+- Hides unnecessary buttons (Explain, Grok, Quote)
+- Cleans up context menu items
+- Automatically adjusts menu sizes after hiding elements
 
 ## Installation
 
-1. **Open the Chrome extensions page**
+### Chrome/Edge
+1. Download or clone this repository
+2. Open Chrome/Edge and go to `chrome://extensions/` or `edge://extensions/`
+3. Enable "Developer mode"
+4. Click "Load unpacked" and select the extension folder
 
-   * Type `chrome://extensions/` into the address bar
-   * Or go to Chrome Menu → More Tools → Extensions
-
-2. **Enable Developer Mode**
-
-   * Toggle the “Developer mode” switch at the top right
-
-3. **Load the extension**
-
-   * Click the “Load unpacked” button
-   * Select the **X** folder and click “Select Folder”
-
-4. **Check**
-
-   * Open X (Twitter) and confirm the specified buttons are hidden
-   * A page reload may be required
+### Firefox
+1. Download or clone this repository
+2. Open Firefox and go to `about:debugging#/runtime/this-firefox`
+3. Click "Load Temporary Add-on"
+4. Select the `manifest.json` file
 
 ## Supported Sites
 
-* [https://twitter.com](https://twitter.com)
-* [https://x.com](https://x.com)
+- https://twitter.com/*
+- https://x.com/*
 
-## Troubleshooting
+## How It Works
 
-### Buttons are not hidden
+The extension uses content scripts to:
+- Monitor DOM changes dynamically
+- Identify and hide unwanted elements
+- Preserve important functionality while removing clutter
+- Handle both static elements and dynamically loaded content
 
-1. **Reload the page** (Ctrl/Cmd + R)
-2. Make sure the **extension is enabled**
-3. **Restart Chrome**
+## Privacy
 
-### Only some buttons are hidden
+- No data collection
+- No network requests
+- Works entirely locally in your browser
+- No permissions required beyond site access
 
-X (Twitter) frequently updates its UI, so selectors may change.
-If this happens, you’ll need to update the selectors in `content.css`.
+## Compatibility
 
-## File Structure
+- Manifest V3 compatible
+- Works with Chromium-based browsers (Chrome, Edge, etc.)
+- Compatible with Firefox
 
-```
-X/
-├── manifest.json     # Extension configuration file
-├── content.css       # CSS to hide buttons
-├── content.js        # JavaScript to dynamically hide elements
-├── icon.svg          # Icon (unused)
-└── README.md         # This file
-```
+## Contributing
 
-## Customization
-
-If you want to keep certain elements visible, comment out the corresponding section in `content.css`.
-
-### Example 1: Show only the Bookmarks button
-
-```css
-/* Hide Bookmarks button */
-/* Comment out this section
-nav[aria-label="Primary"] a[href="/i/bookmarks"],
-... {
-  display: none !important;
-}
-*/
-```
-
-### Example 2: Show the time display
-
-```css
-/* Hide tweet time display */
-/* Comment out this entire section
-/* General time tag */
-/* time { ... } */
-/* through */
-/* Dot (·) hide */
-/* article span:has(+ a time) { ... } */
-*/
-```
-
-## Notes
-
-* This extension is not an official feature of X (Twitter)
-* It may stop working if the UI changes
-* Recommended for private use only
-
-## Changelog
-
-### v1.4.2 (January 2025)
-
-* 🔧 Fixed @username removal again (resolved display name disappearing)
-* 🎯 More specific selector targeting only @username
-* ⚡ Optimized to affect only the user-name area
-
-### v1.4.1 (January 2025)
-
-* ✉️ Added option to hide **Messages** button
-* 🤖 Added option to hide **Enhance your post with Grok** button
-* 🔧 Improved @username removal (keeps display name visible)
-* 🎯 Strengthened removal of **Explain this post** button
-
-### v1.4.0 (January 2025)
-
-* 👤 Added option to hide @username (user handle)
-* 🤖 Added option to hide **Explain this post** button
-* 🔄 Added option to hide the account switch button
-* 🎯 Dynamic @username removal via JavaScript
-
-### v1.3.1 (January 2025)
-
-* 🔧 Fixed black screen issue
-* 🎯 Optimized CSS selectors (removed overly broad ones)
-* 🔍 Refined dot removal logic
-* ⚡ Performance improvements
-
-### v1.3.0 (January 2025)
-
-* 🔔 Added option to hide Notifications button
-* • Added option to hide dot (·)
-* 🔍 Added option to hide search box
-* 📄 Added option to hide footer (Terms of Service, etc.)
-* 🔧 Dynamic dot removal via JavaScript
-
-### v1.2.0 (January 2025)
-
-* ⏰ Added option to hide tweet time display
-* 🗿 Hide relative time (e.g., "5m ago", "2h ago")
-* 🔗 Hide links to time display
-
-### v1.1.2 (January 2025)
-
-* 🎯 Fixed black screen issue on profile page
-* 🔍 Added profile page detection logic
-* 🏯 Supported SPA page transitions
-
-### v1.1.1 (January 2025)
-
-* 🔧 Fixed black screen issue
-* 🎯 Fine-tuned CSS selectors
-* 🔍 Optimized JavaScript hiding process
-
-### v1.1.0 (January 2025)
-
-* ✨ Added option to hide X Premium promotion banner
-* 🔄 Support for dynamically loaded elements
-
-### v1.0.0 (January 2025)
-
-* 🎉 Initial release
-* 📋 Hide Lists button
-* 🔖 Hide Bookmarks button
-* ➕ Hide More button
+1. Fork the repository
+2. Make your changes
+3. Test thoroughly on both X.com and Twitter.com
+4. Submit a pull request
 
 ## License
 
-For personal use only. Redistribution is prohibited.
+This project is open source and available under standard terms.
