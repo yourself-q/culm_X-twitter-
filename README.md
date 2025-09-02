@@ -2,7 +2,7 @@
 
 [日本語](README_JP.md) | English
 
-A browser extension that hides distracting UI elements on X (formerly Twitter) to provide a cleaner browsing experience.
+A browser extension that hides distracting UI elements on X (formerly Twitter) to provide a cleaner browsing experience.I highly recommend using it in conjunction with Culm Twitter.
 
 ## Features
 
